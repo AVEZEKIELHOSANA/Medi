@@ -34,7 +34,7 @@ function Home() {
           <h2>Welcome to Medi! Your one-stop solution to find pharmacies near you at anytime and anywhere.</h2>
         </div>
         <div className="hero-image">
-          <img src="/images/pharmacy.png" alt="Pharmacy" />
+          <img src="" alt="Pharmacy" />
         </div>
       </div>
       <div className="promo-section">
