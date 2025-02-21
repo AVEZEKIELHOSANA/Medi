@@ -23,6 +23,6 @@ function Navbar(){
     </ul>
 </nav>
 </div>
-    )
+    );
 }
 export default Navbar

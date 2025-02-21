@@ -105,10 +105,10 @@ function Signup() {
                             onChange={onConfirmChange}
                         /></span><br /><br />
 
-                    <button
+                    <Link to="/Home"><button
                         type='submit'>
                         SIGN UP
-                    </button> <br />
+                    </button> </Link><br />
 
                     <p>{error}</p>
 

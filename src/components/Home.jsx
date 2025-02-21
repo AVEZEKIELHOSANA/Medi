@@ -1,58 +1,39 @@
-import React, { useState } from "react";
-import { FaSearch, FaBars } from "react-icons/fa";
-import "./Home.css";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import {Search, Sliders} from 'lucide-react';
 
-function Home() {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+import './Home.css';
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/pharmacies?search=${searchQuery}`);
-    }
-  };
+function Home(){
 
-  return (
-    <div className="home-container">
-      <header className="navbar">
-        <div className="logo">MEDI</div>
-        <FaBars className="menu-icon" />
-      </header>
-      <div className="search-bar">
-        <FaSearch />
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-      </div>
-      <div className="hero-section">
-        <div className="welcome-text">
-          <h2>Welcome to Medi! Your one-stop solution to find pharmacies near you at anytime and anywhere.</h2>
+    return(
+
+        <div className="Home">
+          <div className="Home-container">
+          {/*Search */}
+          <div className="Search">
+            <Search className="search-icon" siwe={20}/>
+            <input type="text" placeholder="search for pharmacie or medical facility"/>
+            <Sliders className="filter-icon" size={20}/>
+          </div>
+          <div className="greetings">
+           <h1 className="hello">HELLO!</h1>
+           <p className="textlg">How are you doing today?</p>
+           </div>
+           {/*Banner section */}
+           <div className="message">
+            <p  className="one-stop">MediFinder is your one-stop 
+            solution to find pharmacies near you at anytime and anywhere.</p>
+            <img src="" alt="pharmacy"/>
+           </div>
+           
+           <div className="container">
+            <p className="pharmacie">Pharmacies</p>
+            <p className="pharmacie">Prescriptions</p>
+            <p className="pharmacie">Hospitals</p>
+
+           </div>
+          </div>
         </div>
-        <div className="hero-image">
-          <img src="" alt="Pharmacy" />
-        </div>
-      </div>
-      <div className="promo-section">
-        <div className="promo-card" onClick={() => navigate("/pharmacies")}> 
-          <img src="/images/pharmacy1.png" alt="Looking for Pharmacy?" />
-          <p>Looking for Pharmacy?</p>
-        </div>
-        <div className="promo-card">
-          <img src="/images/pharmacy2.png" alt="Pharmacy Services" />
-          <p>Pharmacy Services</p>
-        </div>
-        <div className="promo-card">
-          <img src="/images/pharmacy3.png" alt="Medication Management" />
-          <p>Medication Management</p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
-
 export default Home;
