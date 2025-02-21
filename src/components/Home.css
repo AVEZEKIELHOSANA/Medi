@@ -1,0 +1,88 @@
+.home-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.menu-icon {
+    display: none;
+}
+
+/* Responsive menu for tablets and mobile */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    .menu-icon {
+        display: block;
+    }
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.search-icon {
+    margin-right: 10px;
+}
+
+/* Main Content */
+.hero-section {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.hero-text {
+    position: absolute;
+    top: 20%;
+    left: 20px;
+    color: white;
+}
+
+.promo-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.promo-card {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
