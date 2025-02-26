@@ -3,11 +3,11 @@ import React from 'react';
 import './App.css'
 //import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter , Routes, Route} from 'react-router-dom';
-//import Routes from './components/Routes';
 import Signup from './components/Signup.jsx';
 import Login from './components/Login.jsx';
-import Home from './components/Home.jsx';
-//import navbar from './components/navbar.jsx';
+
+import HomePage from './components/Home.jsx';
+import Personel from './components/personel.jsx';
 
 function App() {
   
@@ -18,10 +18,11 @@ function App() {
         
         <Routes>
         
-            <Route path='/' element = {<Signup/>}/>
+            <Route path='/' element = {<HomePage/>}/>
             <Route path ="/Signup" element = {<Signup/>}/>
             <Route path="/Login" element={<Login/>}/> 
-            <Route path="/Home" element={<Home/>}/>
+            <Route path='/Home' element={<HomePage/>}/>
+            <Route path='/personel' element={<Personel/>}/>
         </Routes>
     </BrowserRouter>
     

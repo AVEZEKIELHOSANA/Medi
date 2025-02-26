@@ -1,6 +1,6 @@
 import React from "react";
 
-function Map(){
+function Hospitals(){
 
     return(
 
@@ -9,4 +9,4 @@ function Map(){
         </div>
     );
 }
-export default Map;
+export default Hospitals;

@@ -52,9 +52,10 @@ function Signup() {
             console.log('Signup failed')
         }
         else {
-            navigate('/Home');
+            
             setError('Succesful Sign up');
             console.log('Sign up succesful' + 'Going to home page');
+        navigate('/Home')
         }
 
     }
@@ -105,10 +106,10 @@ function Signup() {
                             onChange={onConfirmChange}
                         /></span><br /><br />
 
-                    <Link to="/Home"><button
+                    <button
                         type='submit'>
                         SIGN UP
-                    </button> </Link><br />
+                    </button> <br />
 
                     <p>{error}</p>
 

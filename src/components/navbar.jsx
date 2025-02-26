@@ -5,23 +5,17 @@ function Navbar(){
     return(
 <div>
 <nav className="navbar">
-    <ul>
-        <li>
-            <Link to="/Home"> Home </Link>
-        </li>
-        <li>
-            <Link to="/pharmacy"> Pharmacies </Link>
-        </li>
-        <li>
-            <Link to="/Search"> Search pharmacy</Link>
-        </li>
-        <li>
-            <Link to="/userAccount">
-                My account
-            </Link>
-        </li>
-    </ul>
-</nav>
+        <div className="logo"><strong><img src="./src/assets/logo.png" alt="LOGO"/>MEDIFINDER</strong></div>
+        <ul className="nav-links">
+          <li><Link to="./Home">Home</Link></li>
+          <li>Pharmacies</li>
+          <li>Hospitals</li>
+          <li>Emergency Contact</li>
+          <li>Account</li>
+          <button>Sign up</button>
+        </ul>
+       
+      </nav>
 </div>
     );
 }

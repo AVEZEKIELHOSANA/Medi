@@ -1,12 +1,11 @@
 import React from "react";
 
-function Map(){
+function Account(){
 
     return(
-
         <div>
 
         </div>
     );
 }
-export default Map;
+export default Account;
