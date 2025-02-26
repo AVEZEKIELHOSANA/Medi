@@ -8,6 +8,7 @@ import Login from './components/Login.jsx';
 
 import HomePage from './components/Home.jsx';
 import Personel from './components/personel.jsx';
+import Hospitals from './components/hospital.jsx';
 
 function App() {
   
@@ -23,6 +24,7 @@ function App() {
             <Route path="/Login" element={<Login/>}/> 
             <Route path='/Home' element={<HomePage/>}/>
             <Route path='/personel' element={<Personel/>}/>
+            <Route path='/hosptals' element={<Hospitals/>}/>
         </Routes>
     </BrowserRouter>
     
