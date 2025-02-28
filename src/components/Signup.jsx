@@ -1,129 +1,122 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Signup.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassWord] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState();
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [userType, setUserType] = useState('medical_facility');
+    const [whatsappNumber, setWhatsappNumber] = useState('');
+    const [image, setImage] = useState(null);
+    const [error, setError] = useState('');
 
-    let navigate = useNavigate;
+    const navigate = useNavigate();
 
-    function onNameChange(e) {
-        let name = e.target.value;
-        console.log(setName(name));
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+            setImage(file);
+        } else {
+            setError('Invalid image format. Please upload a JPG or PNG image.');
+        }
+    };
 
-    }
-    function onEmailChange(e) {
-        let email = e.target.value;
-        setEmail(email);
-    }
-
-    function onPasswordChange(e) {
-        let password = e.target.value;
-        setPassWord(password);
-    }
-    function onConfirmChange(e) {
-        let confirmPassword = e.target.value;
-        setConfirmPassword(confirmPassword);
-    }
-    function handleSubmit(e) {
-
-
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
 
-        let commonPassword = ['Password', 'Password123', name,];
-        if (name.length == 0 || password.length == 0 || email.length == 0) {
-            setError('Please fill the form');
-            console.log('Sign up failed')
-        }
-        else if (name > 30) {
-            console.log('Name is too long')
-            setError('The name should not be more than 30 letters');
-        }
-        else if (password == commonPassword) {
-            setError('password cannot be' + commonPassword);
-            console.log('Failed signup');
-        }
-        else if (password != confirmPassword) {
-            setError('password is incorrect');
-            console.log('Signup failed')
-        }
-        else {
-            
-            setError('Succesful Sign up');
-            console.log('Sign up succesful' + 'Going to home page');
-        navigate('/Home')
+        if (password !== passwordConfirmation) {
+            setError('Passwords do not match!');
+            return;
         }
 
-    }
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('password_confirmation', passwordConfirmation);
+        formData.append('user_type', userType);
+        formData.append('whatsapp_number', whatsappNumber);
+        if (image) formData.append('image', image);
+
+        try {
+            const response = await axios.post(
+                'http://rrn24.techchantier.site/Medi-finder/public/api/auth/register',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Accept': 'application/json',
+                    },
+                }
+            );
+
+            if (response.status === 201 || response.status === 200) {
+                console.log('Registration successful:', response.data);
+                navigate('/Home');
+            }
+        } catch (err) {
+            console.error('Registration failed:', err.response?.data || err.message);
+            const validationErrors = err.response?.data?.errors;
+            setError(validationErrors ? Object.values(validationErrors).flat().join(' ') : 'Registration failed. Please try again.');
+        }
+    };
 
     return (
-        <div>
-            <h1>
-                WELCOME TO MEDIFINDER
-            </h1>
-            <div className='body'>
+        <div className='signup-container'>
 
-                <h2>SignUp</h2>
-                <form
-                    onSubmit={handleSubmit}>
-
-                    <span>
-                        <input
-
-                            placeholder="Enter Your Name"
-                            type="text"
-                            autoComplete="off"
-                            value={name}
-                            onChange={onNameChange}
-                        /></span><br />
-                    <span>
-                        <input
-                            placeholder="Enter email"
-                            type="email"
-                            autoComplete="off"
-                            value={email}
-                            onChange={onEmailChange}
-                        /></span><br />
-
-                    <span>
-                        <input
-                            placeholder="Enter password"
-                            type="password"
-                            autoComplete="off"
-                            value={password}
-                            onChange={onPasswordChange}
-                        /></span><br />
-                    <span>
-                        <input
-                            placeholder="Enter password again"
-                            type="password"
-                            autoComplete="off"
-                            value={confirmPassword}
-                            onChange={onConfirmChange}
-                        /></span><br /><br />
-
-                    <button
-                        type='submit'>
-                        SIGN UP
-                    </button> <br />
-
-                    <p>{error}</p>
-
-                </form>
+            <h2 className='Register'>Register Medical Facility</h2>
+            {error && <div className='error'>{error}</div>}
 
 
-
+            <form onSubmit={handleSubmit}>
+                <input
+                    type='text'
+                    placeholder='Name' value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className='validate-input' required /><br /><br />
+                <input
+                    type='email'
+                    placeholder='Email'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className='validate-input' required />
+                <input
+                    type='password'
+                    placeholder='Password'
+                    value={password} onChange={(e) => setPassword(e.target.value)}
+                    className='validate-input' required />
+                <input
+                    type='password'
+                    placeholder='Confirm Password'
+                    value={passwordConfirmation}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    className='validate-input' required />
+                <select value={userType} onChange={(e) => setUserType(e.target.value)} className='w-full p-2 mb-4 border rounded' required>
+                    <option value='medical_facility'>Medical Facility</option>
+                    <option value='finder'>Finder</option>
+                </select>
+                <input
+                    type='text'
+                    placeholder='WhatsApp Number'
+                    value={whatsappNumber} onChange={(e) => setWhatsappNumber(e.target.value)}
+                    className='validate-input' required />
+                <input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleImageChange}
+                    className='profile-image' />
+                <button
+                    type='submit'
+                    className='btn-signup'>Register</button>
+            </form>
+            <div className='Linktologin'>
+                <p>Already have an account?</p><Link to="/Login">Login</Link>
             </div>
-            <p id='accountexist'>Already have an account?
-                <Link to="/Login">Login</Link>
-            </p>
         </div>
-
     );
-}
+};
 
 export default Signup;

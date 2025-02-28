@@ -1,9 +1,14 @@
 import React from "react";
 import {Search} from 'lucide-react';
-import axios from 'axios';
+//import axios from 'axios';
 
 function Searching(){
- const handleClick = async () =>
+    function handleClick(){
+
+
+        
+    }
+ /*const handleClick = async () =>
  {
     const query = document.getElementById('search').value;
 
@@ -21,7 +26,7 @@ function Searching(){
  catch(error){
     console.error(error);
  }
- }
+ }*/
 
     return(
         <div className="Search-fxn">

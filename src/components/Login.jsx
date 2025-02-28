@@ -1,48 +1,95 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+// Importing necessary libraries and components
+import React, { useState } from 'react'; 
+import { useNavigate } from 'react-router-dom'; 
+import { storeAuthToken } from '../utils/auth.jsx';
+import axios from 'axios'; 
 
+// Define the Login component
 function Login() {
-  const [name, setName] = useState('');
+  // Initializing state variables
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e) {
+  
+  const navigate = useNavigate();
+
+
+  const handleLogin = async (e) => {
+    
     e.preventDefault();
 
-  }
+    
+    setLoading(true);
 
+    try {
+      // Make a POST request to the login API endpoint with the email and password
+      const response = await axios.post('http://rrn24.techchantier.site/Medi-finder/public/api/auth/login', {
+        email,
+        password,
+      });
+
+      // Check if the response contains an authentication token
+      if (response.data.token) {
+        // Store the authentication token using the custom utility function
+        storeAuthToken(response.data.token);
+
+        // Navigate to the protected dashboard route
+        navigate('/Home');
+      }
+    } catch (error) {
+      // Handle any errors that occur during the login process
+      if (error.response) {
+        // Set the error message to the error response data
+        setErrorMessage(error.response.data.message || 'Login failed.');
+      } else {
+        // Set a generic error message if no error response data is available
+        setErrorMessage('An error occurred.');
+      }
+    } finally {
+      // Set the loading status to false after the login process is complete
+      setLoading(false);
+    }
+  };
+
+  // Render the login form component
   return (
     <div>
-      <h1>Hello!
-        MediFinder is glad to see you again.</h1>
-      <div className='body'>
-        <p>Login to your account</p>
-        <form onSubmit={handleSubmit}>    <div>
-          <span>
-            <input id='nlogin'
-              value={name}
-              type='text' placeholder='Enter your user name or email' />
-          </span>
-          <span>
-            <input
-              value={password}
-              type='Password' id='passwd' placeholder='Enter password' />
-          </span>
-          <button type='submit'>Log in</button>
-          <p>{error}</p>
+      <h2>Login</h2>
+
+      
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+      
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
 
-        </form>
-      </div>
-      <p id='sign'>Do not have an account? <Link to="/Signup">Create account</Link></p>
-      <div>
-        <p id='or'>OR</p>
-        <button id='goglog'>Login With Google</button>
-
-      </div>
+        
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
     </div>
   );
-
 }
-export default Login
+
+
+export default Login;
