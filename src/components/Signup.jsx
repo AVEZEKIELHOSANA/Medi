@@ -67,47 +67,50 @@ function Signup() {
     return (
         <div className='signup-container'>
 
-            <h2 className='Register'>Register Medical Facility</h2>
+            <h2 className='Register'>Welcome to MediFinder</h2>
             {error && <div className='error'>{error}</div>}
 
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='form-content'>
+            <h3>Sign Up </h3>
                 <input
                     type='text'
                     placeholder='Name' value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className='validate-input' required /><br /><br />
+                    className='validate-input' required /><br />
                 <input
                     type='email'
                     placeholder='Email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className='validate-input' required />
+                    className='validate-input' required /><br/>
                 <input
                     type='password'
                     placeholder='Password'
                     value={password} onChange={(e) => setPassword(e.target.value)}
-                    className='validate-input' required />
+                    className='validate-input' required /><br/>
                 <input
                     type='password'
                     placeholder='Confirm Password'
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    className='validate-input' required />
-                <select value={userType} onChange={(e) => setUserType(e.target.value)} className='w-full p-2 mb-4 border rounded' required>
+                    className='validate-input' required /><br/>
+                <select value={userType} onChange={(e) => setUserType(e.target.value)} className='validate-input' required>
                     <option value='medical_facility'>Medical Facility</option>
                     <option value='finder'>Finder</option>
-                </select>
+                </select><br/>
                 <input
                     type='text'
                     placeholder='WhatsApp Number'
                     value={whatsappNumber} onChange={(e) => setWhatsappNumber(e.target.value)}
-                    className='validate-input' required />
-                <input
+                    className='validate-input' required /><br/>
+                <label>Upload profile picture:</label>
+                <br/><input
+                
                     type='file'
                     accept='image/*'
                     onChange={handleImageChange}
-                    className='profile-image' />
+                    className='profile-image' /><br/>
                 <button
                     type='submit'
                     className='btn-signup'>Register</button>

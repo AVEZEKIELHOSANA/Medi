@@ -57,3 +57,30 @@ cursor: pointer;
 
 }
   
+.Signup-container{
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+}
+.form-content{
+    display: flex;
+    flex-direction: column;
+justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    margin: 30px auto;
+    padding: 10px;
+    background-color: #607e8a;
+    border: 3px solid #cccccc;
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgb(70, 64, 64);
+}
+.form-content .validate-input{
+    width: 250px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 15px;
+    box-sizing: border-box;
+    height: 35px;
+    color: black;
+}

@@ -10,6 +10,7 @@ import HomePage from './components/Home.jsx';
 import Personel from './components/personel.jsx';
 import Hospitals from './components/hospital.jsx';
 import MedicalUnits from './components/pharmacyList.jsx';
+import Emergency from './components/emergency.jsx';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
             <Route path='/personel' element={<Personel/>}/>
             <Route path='/hosptals' element={<Hospitals/>}/>
             <Route path='/pharmacyList' element={<MedicalUnits/>}/>
+            <Route path='/emergency' element={<Emergency/>}/>
         </Routes>
     </BrowserRouter>
     
