@@ -3,7 +3,7 @@ import "./styles.css";
 import { Link } from 'react-router-dom';
 import Navbar from './navbar.jsx';
 import Footer from "./footer.jsx";
-import Searching from "./Search.jsx";
+//import Searching from "./search.jsx";
 
 function HomePage() {
   return (
@@ -11,14 +11,13 @@ function HomePage() {
       {/* Navbar */}
       <Navbar />
 
-<Searching/>
       {/* Hero Section */}
       <header className="hero">
         <div className="hero-content">
           <h1>Your Health Our Priority</h1>
           <p>MediFinder your one-stop solution to find Medical services.</p>
-          <button className="btn">Get Started</button>
-          <button className="btn secondary">Find Care</button>
+          <Link to="/Signup"><button className="btn">Get Started</button></Link>
+          <Link to="/pharmacyList"><button className="btn secondary">Find Care</button></Link>
         </div>
         <div className="hero-image">
           <img src="./src/assets/final1.jpg" alt="pharmacie" />

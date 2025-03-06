@@ -8,9 +8,11 @@ import Login from './components/Login.jsx';
 
 import HomePage from './components/Home.jsx';
 import Personel from './components/personel.jsx';
-import Hospitals from './components/hospital.jsx';
+import MedicalFacilitiesList from './components/hospital.jsx';
 import MedicalUnits from './components/pharmacyList.jsx';
 import Emergency from './components/emergency.jsx';
+import MedicalFacilitySearch from './components/Search.jsx';
+
 
 function App() {
   
@@ -26,9 +28,11 @@ function App() {
             <Route path="/Login" element={<Login/>}/> 
             <Route path='/Home' element={<HomePage/>}/>
             <Route path='/personel' element={<Personel/>}/>
-            <Route path='/hosptals' element={<Hospitals/>}/>
+            <Route path='/hospital' element={<MedicalFacilitiesList/>}/>
             <Route path='/pharmacyList' element={<MedicalUnits/>}/>
+            <Route path='/search' element={<MedicalFacilitySearch/>}/>
             <Route path='/emergency' element={<Emergency/>}/>
+            
         </Routes>
     </BrowserRouter>
     

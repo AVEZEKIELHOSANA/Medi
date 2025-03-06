@@ -14,7 +14,9 @@ function Signup() {
 
     const navigate = useNavigate();
 
-    const handleImageChange = (e) => {
+
+
+    function handleImageChange(e) {
         const file = e.target.files[0];
         if (file && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
             setImage(file);
@@ -51,11 +53,16 @@ function Signup() {
                         'Accept': 'application/json',
                     },
                 }
+
             );
 
             if (response.status === 201 || response.status === 200) {
-                console.log('Registration successful:', response.data);
+                const data = response.data
+                localStorage.setItem('token', data.token)
+                console.log('Registration successful:', data.user);
+
                 navigate('/Home');
+
             }
         } catch (err) {
             console.error('Registration failed:', err.response?.data || err.message);
@@ -72,7 +79,7 @@ function Signup() {
 
 
             <form onSubmit={handleSubmit} className='form-content'>
-            <h3>Sign Up </h3>
+                <h3>Sign Up </h3>
                 <input
                     type='text'
                     placeholder='Name' value={name}
@@ -83,34 +90,34 @@ function Signup() {
                     placeholder='Email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className='validate-input' required /><br/>
+                    className='validate-input' required /><br />
                 <input
                     type='password'
                     placeholder='Password'
                     value={password} onChange={(e) => setPassword(e.target.value)}
-                    className='validate-input' required /><br/>
+                    className='validate-input' required /><br />
                 <input
                     type='password'
                     placeholder='Confirm Password'
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    className='validate-input' required /><br/>
+                    className='validate-input' required /><br />
                 <select value={userType} onChange={(e) => setUserType(e.target.value)} className='validate-input' required>
                     <option value='medical_facility'>Medical Facility</option>
                     <option value='finder'>Finder</option>
-                </select><br/>
+                </select><br />
                 <input
                     type='text'
                     placeholder='WhatsApp Number'
                     value={whatsappNumber} onChange={(e) => setWhatsappNumber(e.target.value)}
-                    className='validate-input' required /><br/>
+                    className='validate-input' required /><br />
                 <label>Upload profile picture:</label>
-                <br/><input
-                
+                <br /><input
+
                     type='file'
                     accept='image/*'
                     onChange={handleImageChange}
-                    className='profile-image' /><br/>
+                    className='profile-image' /><br />
                 <button
                     type='submit'
                     className='btn-signup'>Register</button>
