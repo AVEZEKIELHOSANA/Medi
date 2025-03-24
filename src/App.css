@@ -1,86 +1,186 @@
-
-.navbar ul{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    align-items: center;
-
-}
-.navbar ul li{
-margin-right: 20px;
-text-decoration: none;
-color: black;
-cursor: pointer;
-}
-
-.navbar .menu{
-    width: 50px;
-    height: 50px;
-}
-.logo img{
-    width: 100px;
-    height: 70px;
-}
-.logo strong{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-.footer{
-    background-color: #cccccc;
-}
+/* Navbar Container */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
-    background: #f8f9fa;
-  }
-  
-#Search{
-    text-align: center;
-    border-radius: 10px;
-    height: 30px;
-    border: 1px solid;
-
+    padding: 1rem;
+    background-color: #faf8f9
+    border-bottom: 1px solid #ddd;
+    
 }
-.Search-fxn{
+
+/* Logo */
+.logo {
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 12px;
+    gap: 0.5rem;
+}
 
+.logo img {
+    height: 40px;
 }
-  
-.Signup-container{
-    font-family: sans-serif;
-    background-color: #f8f9fa;
-}
-.form-content{
+
+/* Search Bar */
+.search {
     display: flex;
-    flex-direction: column;
-justify-content: center;
     align-items: center;
-    max-width: 300px;
-    margin: 30px auto;
-    padding: 10px;
-    background-color: #607e8a;
-    border: 3px solid #cccccc;
-    border-radius: 25px;
-    box-shadow: 0 0 10px rgb(70, 64, 64);
+    gap: 0.5rem;
 }
-.form-content .validate-input{
-    width: 250px;
-    padding: 10px;
-    margin-bottom: 10px;
+
+.search-input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.search-button button {
+    background: none;
     border: none;
-    border-radius: 15px;
-    box-sizing: border-box;
-    height: 35px;
-    color: black;
+    cursor: pointer;
+}
+
+/* Nav Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+}
+
+.nav-links a:hover {
+    color: #28a745;
+    transform: scale(1.1);
+    transition: all 0.3s ease-in;
+    font-size: 20px;
+
+}
+.nav-links #sign{
+
+border-color: #28a745;
+color: #28a745;
+}
+
+.nav-links #sign:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.nav-links button {
+    background: none;
+    border: 1px solid #007bff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+.nav-links button:hover {
+    background: #007bff;
+    color: #fff;
+}
+
+/* Menu Button (Hidden on Big Screens) */
+.menu-button {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown Menu (Hidden on Big Screens) */
+.dropdown-menu {
+    display: none;
+    flex-direction: row;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 1rem;
+    background-color: #caeaf7;
+    border: 1px solid #ddd;
+    position: absolute;
+    top: 60px;
+    right: 1rem;
+    z-index: 1000;
+}
+
+.dropdown-menu li a:hover {
+    color: #28a745;
+    transform: scale(1.1);
+    transition: all 0.3s ease-in;
+    font-size: 15px;
+
+}
+
+.dropdown-menu li {
+    display: block;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu button {
+    background: none;
+    border: 1px solid #007bff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+.dropdown-menu button:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar{
+        display: flex;
+        justify-items: center;
+    }
+     
+
+    .nav-links {
+        display: none; /* Hide nav links on small screens */
+    }
+    .logo{
+        display: flex;
+    
+        font-size: 15px;
+    }
+     
+    
+    
+    
+    .menu-button {
+        display: inline-block; /* Show menu button on small screens */
+    }
+
+    .dropdown-menu {
+        display: flex; /* Show dropdown menu when isActive is true */
+    flex-direction: row;
+    align-items: center;
+    }
+    .dropdown-menu button:hover {
+        background: #007bff;
+        color: white;
+    }
+
+    
+
 }

@@ -7,12 +7,13 @@ import Signup from './components/Signup.jsx';
 import Login from './components/Login.jsx';
 
 import HomePage from './components/Home.jsx';
-import Personel from './components/personel.jsx';
+//import Personel from './components/personel.jsx';
 import MedicalFacilitiesList from './components/hospital.jsx';
 import MedicalUnits from './components/pharmacyList.jsx';
-import Emergency from './components/emergency.jsx';
-import MedicalFacilitySearch from './components/Search.jsx';
-
+//import Emergency from './components/emergency.jsx';
+import MedicalFacilitySearch from './components/search.jsx';
+import LandingPage from './components/landing.jsx';
+import FacilityDashboard from './components/care-dashboard.jsx';
 
 function App() {
   
@@ -27,12 +28,13 @@ function App() {
             <Route path ="/Signup" element = {<Signup/>}/>
             <Route path="/Login" element={<Login/>}/> 
             <Route path='/Home' element={<HomePage/>}/>
-            <Route path='/personel' element={<Personel/>}/>
+            
             <Route path='/hospital' element={<MedicalFacilitiesList/>}/>
             <Route path='/pharmacyList' element={<MedicalUnits/>}/>
             <Route path='/search' element={<MedicalFacilitySearch/>}/>
-            <Route path='/emergency' element={<Emergency/>}/>
             
+            <Route path='/landing' element={<LandingPage/>}/>
+            <Route path='/care-dashboard' element={FacilityDashboard}/>
         </Routes>
     </BrowserRouter>
     

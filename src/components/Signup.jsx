@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
+
 function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ function Signup() {
     const [whatsappNumber, setWhatsappNumber] = useState('');
     const [image, setImage] = useState(null);
     const [error, setError] = useState('');
+     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -32,6 +34,10 @@ function Signup() {
         if (password !== passwordConfirmation) {
             setError('Passwords do not match!');
             return;
+        }
+        //come work here
+        else if(whatsappNumber ){
+
         }
 
         const formData = new FormData();
@@ -61,7 +67,11 @@ function Signup() {
                 localStorage.setItem('token', data.token)
                 console.log('Registration successful:', data.user);
 
-                navigate('/Home');
+                const user = {name, password, userType};
+
+                localStorage.setItem('user',JSON.stringify(user));
+
+                navigate('/landing');
 
             }
         } catch (err) {
@@ -69,63 +79,89 @@ function Signup() {
             const validationErrors = err.response?.data?.errors;
             setError(validationErrors ? Object.values(validationErrors).flat().join(' ') : 'Registration failed. Please try again.');
         }
+
+        finally {
+            // Set the loading status to false after the login process is complete
+            setLoading(false);
+          }
     };
 
-    return (
-        <div className='signup-container'>
+    return(
+        <div className='flex items-center justify-center flex-col bg-gray-100 min-h-screen'>
+<div className='w-full max-w-md bg-white p-8 rounded-lg shadow-md'>
+            <h2 className='text-2xl text-gray-800 py-5 font-bold text-center'>Welcome to MediFinder</h2>
+            
 
-            <h2 className='Register'>Welcome to MediFinder</h2>
-            {error && <div className='error'>{error}</div>}
 
-
-            <form onSubmit={handleSubmit} className='form-content'>
-                <h3>Sign Up </h3>
-                <input
+            <form onSubmit={handleSubmit} className='p-4 mt-2 '>
+                <h3 className='font-medium text-blue-500 text-xl text-center'>Sign Up </h3>
+                <label className='font-medium text-sm text-gray-700 block'>Name : </label><input
                     type='text'
-                    placeholder='Name' value={name}
+                    placeholder='Enter your Name' value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className='validate-input' required /><br />
-                <input
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' required /><br />
+                <label className='font-mediu text-sm text-gray-700 block'>Email: </label><input
                     type='email'
                     placeholder='Email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className='validate-input' required /><br />
-                <input
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' required /><br />
+                <label className='font-medium text-sm text-gray-700 block'>password:  </label><input
                     type='password'
                     placeholder='Password'
                     value={password} onChange={(e) => setPassword(e.target.value)}
-                    className='validate-input' required /><br />
-                <input
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' required /><br />
+                <label className='font-medium text-sm text-gray-700 block'>confirm :  </label><input
                     type='password'
-                    placeholder='Confirm Password'
+                    placeholder='Confirm your Password'
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    className='validate-input' required /><br />
-                <select value={userType} onChange={(e) => setUserType(e.target.value)} className='validate-input' required>
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' required /><br />
+                <label className='font-medium text-sm text-gray-700 block'>Select userType: </label>
+                <select 
+                 className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500'
+                value={userType} onChange={(e) => setUserType(e.target.value)}  required>
                     <option value='medical_facility'>Medical Facility</option>
                     <option value='finder'>Finder</option>
                 </select><br />
-                <input
+                <label className='font-medium text-sm text-gray-700 block'>Phone number: </label><input
                     type='text'
                     placeholder='WhatsApp Number'
                     value={whatsappNumber} onChange={(e) => setWhatsappNumber(e.target.value)}
-                    className='validate-input' required /><br />
-                <label>Upload profile picture:</label>
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' required /><br />
+                <label className='font-medium text-sm text-gray-700 block'>Upload profile picture: </label>
                 <br /><input
 
                     type='file'
                     accept='image/*'
                     onChange={handleImageChange}
-                    className='profile-image' /><br />
+                    className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm
+                    focus:ring-green-500 focus:border-green-500' /><br />
                 <button
                     type='submit'
-                    className='btn-signup'>Register</button>
+                    className='w-full mt-6 bg-green-500 text-white py-2 rounded-md hover:bg-blue-500'
+                    disabled={loading}
+                    >
+                    
+                    {loading ? 'Signing up...' : 'Register'}
+                    Register</button>
+
+{error && <div className='error'>{error}</div>}
+
             </form>
-            <div className='Linktologin'>
-                <p>Already have an account?</p><Link to="/Login">Login</Link>
+            </div>
+            <div className='w-full max-w-md p-8 text-center'>
+                <p>Already have an account?  <Link to="/Login" className='text-blue-800 hover:text-green-300 hover:text-2xl'>Login</Link></p>
             </div>
         </div>
+        
+        
     );
 };
 

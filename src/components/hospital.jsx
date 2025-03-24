@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import MedicalFacilitySearch from "./search";
+import Navbar from "./navbar";
 
-function MedicalFacilitiesList(){
+function MedicalFacilitiesList() {
   const [facilities, setFacilities] = useState([]);
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -93,35 +95,57 @@ function MedicalFacilitiesList(){
   };
 
   return (
-    <div>
-      <h1>Medical Facilities</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
+    <div className="p-8 bg-gray-100 min-h-screen">
+<Navbar/>
+    <MedicalFacilitySearch/>
+      <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">Medical Facilities</h1>
+      {loading && <p className="text-center text-gray-600">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {facilities.map((facility) => (
-          <li key={facility.id}>
-            <h2>{facility.user.name}</h2>
-            <p>{facility.description}</p>
-            <p>Status: {facility.status}</p>
-            <button onClick={() => handleViewDetails(facility.id)}>
+          <div
+            key={facility.id}
+            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow transform hover:scale-105 hover:bg-gray-50 transition-all duration-300"
+          >
+            <div className="flex items-center space-x-4">
+              {/* Profile Photo */}
+              {facility.user.photo && (
+                <img
+                  src={facility.user.photo}
+                  alt={`${facility.user.name}'s profile`}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+              )}
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800">{facility.user.name}</h2>
+                <p className="text-gray-600 mt-2">{facility.description}</p>
+                <p className="text-sm text-gray-500 mt-1">Status: {facility.status}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleViewDetails(facility.id)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
               View Details
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
-      <div>
+      </div>
+      <div className="flex justify-center items-center mt-8 space-x-4">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
         >
           Previous
         </button>
-        <span>
+        <span className="text-gray-700">
           Page {pagination.currentPage} of {pagination.lastPage}
         </span>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.lastPage}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
         >
           Next
         </button>
@@ -129,29 +153,41 @@ function MedicalFacilitiesList(){
 
       {/* Display selected facility details */}
       {selectedFacility && (
-        <div>
-          <h2>Details for {selectedFacility.user.name}</h2>
-          <p>Address: {selectedFacility.address}</p>
-          <p>Description: {selectedFacility.description}</p>
-          <p>Status: {selectedFacility.status}</p>
-          <h3>Operating Hours:</h3>
-          <ul>
+        <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            {/* Profile Photo */}
+            {selectedFacility.user.photo && (
+              <img
+                src={selectedFacility.user.photo}
+                alt={`${selectedFacility.user.name}'s profile`}
+                className="w-20 h-20 rounded-full object-cover"
+              />
+            )}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Details for {selectedFacility.user.name}</h2>
+              <p className="text-gray-600 mt-2">Address: {selectedFacility.address}</p>
+              <p className="text-gray-600 mt-1">Description: {selectedFacility.description}</p>
+              <p className="text-gray-600 mt-1">Status: {selectedFacility.status}</p>
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mt-4">Operating Hours:</h3>
+          <ul className="mt-2 space-y-1">
             {selectedFacility.operating_hours.map((hour, index) => (
-              <li key={index}>
+              <li key={index} className="text-gray-600">
                 {hour.day}: {hour.open ? "Open" : "Closed"}
               </li>
             ))}
           </ul>
-          <h3>Units:</h3>
-          <ul>
+          <h3 className="text-xl font-semibold text-gray-800 mt-4">Units:</h3>
+          <ul className="mt-2 space-y-1">
             {selectedFacility.units.map((unit, index) => (
-              <li key={index}>{unit}</li>
+              <li key={index} className="text-gray-600">{unit}</li>
             ))}
           </ul>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default MedicalFacilitiesList;
