@@ -1,102 +1,132 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./navbar";
-import Footer from "./footer";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Dialog } from '@headlessui/react';
+import { FiSearch, FiMapPin, FiUsers, FiLock, FiLogIn, FiUserPlus } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage() {
-  // State to track user type
-  const [userType, setUserType] = useState(''); // Default to "finder"
-  const navigate = useNavigate
+  const [isOpen, setIsOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const data = response.data
-    // Store the authentication token using the custom utility function
-    localStorage.getItem(data.token);
-    console.log(data.user);
-
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if(data && user){
-
-      setUserType(user.userType);
-
+    // Check authentication status
+    const token = localStorage.getItem('authToken');
+    const role = localStorage.getItem('userRole');
+    
+    if (token) {
+      setIsAuthenticated(true);
+      setUserRole(role || null);
+      if (!role) {
+        setIsOpen(true); // Only show role selection if authenticated but no role selected
+      }
     }
-    else{
-      navigate('/Login')
-    }
+    setLoading(false);
+  }, []);
 
-  }, [] );
+  const handleSelection = (role) => {
+    setUserRole(role);
+    setIsOpen(false);
+    localStorage.setItem('userRole', role);
+  };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Show login/signup ONLY if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <FiLock className="text-blue-600 text-2xl" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Access Required</h2>
+          <p className="text-gray-600 mb-6">
+            Please login or sign up to access the medical finder platform
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
+            >
+              <FiLogIn className="mr-2" />
+              Login to Your Account
+            </button>
+            <button
+              onClick={() => navigate('/signup')}
+              className="w-full px-6 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition flex items-center justify-center"
+            >
+              <FiUserPlus className="mr-2" />
+              Create New Account
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Only authenticated users see this part
   return (
-    <div>
-      <Navbar />
+    <div className="relative min-h-screen bg-gray-100">
+      {/* Role Selection Modal (only shows if no role selected) */}
+      <Dialog open={isOpen} onClose={() => {}} className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-40" aria-hidden="true" />
+        <Dialog.Panel className="z-50 bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 space-y-6">
+          <Dialog.Title className="text-2xl font-bold text-gray-800 text-center">
+            Welcome to MediFinder!
+          </Dialog.Title>
+          <p className="text-gray-600 text-center">
+            Please select your role to continue
+          </p>
+          <div className="space-y-4">
+            <button
+              onClick={() => handleSelection('finder')}
+              className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
+            >
+              <FiSearch className="mr-3" />
+              <div className="text-left">
+                <div className="font-medium">I'm a Patient</div>
+                <div className="text-sm opacity-80">Looking for medical facilities</div>
+              </div>
+            </button>
+            <button
+              onClick={() => handleSelection('facility')}
+              className="w-full px-6 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center"
+            >
+              <FiUsers className="mr-3" />
+              <div className="text-left">
+                <div className="font-medium">I'm a Healthcare Provider</div>
+                <div className="text-sm opacity-80">Managing a medical facility</div>
+              </div>
+            </button>
+          </div>
+        </Dialog.Panel>
+      </Dialog>
 
-      
-      {/* Hero Section */}
-      <section className="hero1 max-w-100% max-h-96 border-gray-400">
-        {userType === "finder" ? (
-          <div>
-            <h1 className="text-3xl font-bold">Welcome, Finder!</h1>
-            <p>Find the best medical facilities near you.</p>
-          </div>
-        ) : (
-          <div>
-            <h1 className="text-3xl font-bold">Welcome, Medical Facility!</h1>
-            <p>Manage your facility and connect with patients.</p>
-          </div>
-        )}
-      </section>
-
-      {/* Facilities Section */}
-      <section className="viewfacility border-blue-200">
-        {userType === "finder" ? (
-          <div>
-            <h2 className="text-2xl font-bold">Explore Facilities</h2>
-            <p>Discover top-rated medical facilities.</p>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-2xl font-bold">Manage Your Facility</h2>
-            <p>Update your information and connect with patients.</p>
-            <button className="bg-green-500 hover:bg-amber-100 hover:text-black">Update Information</button>
-          </div>
-        )}
-      </section>
-
-      {/* New Services Section */}
-      <section className="max-h-96 border-gray-400">
-        {userType === "finder" ? (
-          <div>
-            <h2 className="text-2xl font-bold">New Services for Finders</h2>
-            <p>Check out the latest features for finding facilities.</p>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-2xl font-bold">New Services for Facilities</h2>
-            <p>Explore tools to enhance your facility management.</p>
-          </div>
-        )}
-      </section>
-
-      {/* Why Use This App Section */}
-      <section className=" max-h-96 border border-gray-800">
-        {userType === "finder" ? (
-          <div>
-            <h2 className="text-2xl font-bold">Why Use This App as a Finder?</h2>
-            <div className="flex justify-around align-middle">
-<img src="" alt="health care"/>
-            <p>Find the best care quickly and easily.</p>
+      {/* Main Content (only shows after role selection) */}
+      {!isOpen && (
+        <div className="w-full">
+          {userRole === 'finder' && (
+            <div className="text-center py-20">
+              <h1 className="text-4xl font-bold text-blue-600 mb-4">Welcome Back!</h1>
+              <p className="text-xl text-gray-600">Start exploring medical facilities near you</p>
             </div>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-2xl font-bold">Why Use This App as a Facility?</h2>
-            <p>Reach more patients and streamline operations.</p>
-          </div>
-        )}
-      </section>
-
-      <Footer />
+          )}
+          {userRole === 'facility' && (
+            <div className="text-center py-20">
+              <h1 className="text-4xl font-bold text-green-600 mb-4">Manage Your Facility</h1>
+              <p className="text-xl text-gray-600">Connect with patients and grow your practice</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

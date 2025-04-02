@@ -14,6 +14,8 @@ import MedicalUnits from './components/pharmacyList.jsx';
 import MedicalFacilitySearch from './components/search.jsx';
 import LandingPage from './components/landing.jsx';
 import FacilityDashboard from './components/care-dashboard.jsx';
+import MedicalFacilityDetails from './components/details.jsx';
+import UnitCreationForm from './components/createUnit.jsx';
 
 function App() {
   
@@ -34,7 +36,9 @@ function App() {
             <Route path='/search' element={<MedicalFacilitySearch/>}/>
             
             <Route path='/landing' element={<LandingPage/>}/>
-            <Route path='/care-dashboard' element={FacilityDashboard}/>
+            <Route path='/care-dashboard' element={<FacilityDashboard/>}/>
+            <Route path='/details' element={<MedicalFacilityDetails/>}/>
+            <Route path='/createUnit' element={<UnitCreationForm/>}/>
         </Routes>
     </BrowserRouter>
     

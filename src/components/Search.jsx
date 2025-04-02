@@ -1,136 +1,158 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function MedicalFacilitySearch() {
-    // State for the search query
     const [query, setQuery] = useState('');
-    // State for the search results
     const [results, setResults] = useState([]);
-    // State for loading and error handling
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    // State for pagination
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalResults, setTotalResults] = useState(0);
+    const [searchPerformed, setSearchPerformed] = useState(false);
 
-    // Function to handle the search
-    const handleSearch = async (e) => {
-        e.preventDefault(); // Prevent form submission from reloading the page
+    const API_BASE_URL = "https://rrn24.techchantier.com/Medi-finder/public/api/medical-facilities/search";
 
-        if (query.length < 2) {
-            setError('Query must be at least 2 characters long.');
+    const searchFacilities = async (searchQuery, page = 1) => {
+        if (!searchQuery || searchQuery.trim().length < 2) {
+            setError('Please enter at least 2 characters to search');
             return;
         }
 
         setIsLoading(true);
         setError('');
-        setCurrentPage(1); // Reset to the first page when performing a new search
 
         try {
-            const response = await fetch(
-                `http://rrn24.techchantier.site/Medi-finder/public/api/medical-facilities/search?query=${query}&page=${currentPage}`,
+            const response = await axios.get(
+                `${API_BASE_URL}/medical-facilities/search`,
                 {
+                    params: {
+                        query: searchQuery.trim(),
+                        page: page
+                    },
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
+                    timeout: 10000
                 }
             );
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
+            if (!response.data || !response.data.data) {
+                throw new Error('Invalid response structure from server');
             }
 
-            const data = await response.json();
-            setResults(data.data); // Update the results state with the fetched data
-            setTotalPages(data.meta.last_page); // Update the total number of pages
+            setResults(response.data.data);
+            setTotalPages(response.data.meta?.last_page || 1);
+            setTotalResults(response.data.meta?.total || 0);
+            setCurrentPage(page);
+            setSearchPerformed(true);
         } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('An error occurred. Please try again.');
+            console.error('API Error:', error);
+            setError(error.response?.data?.message || 
+                    error.message || 
+                    'Failed to search facilities. Please try again.');
+            setResults([]);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Function to handle pagination (fetch data for a specific page)
-    const handlePageChange = async (page) => {
-        if (page < 1 || page > totalPages) return; // Prevent invalid page numbers
+    const handleSearch = (e) => {
+        e.preventDefault();
+        searchFacilities(query, 1);
+    };
 
-        setIsLoading(true);
-        setError('');
-
-        try {
-            const response = await fetch(
-                `http://rrn24.techchantier.site/Medi-finder/public/api/medical-facilities/search?query=${query}&page=${page}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
-            }
-
-            const data = await response.json();
-            setResults(data.data); // Update the results state with the fetched data
-            setCurrentPage(page); // Update the current page
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('An error occurred. Please try again.');
-        } finally {
-            setIsLoading(false);
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchFacilities(query, 1);
         }
+    };
+
+    const handlePageChange = (page) => {
+        if (page < 1 || page > totalPages) return;
+        searchFacilities(query, page);
     };
 
     return (
         <div style={styles.container}>
             <h1 style={styles.title}>Medical Facility Search</h1>
 
-            {/* Search Form */}
             <form onSubmit={handleSearch} style={styles.form}>
                 <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search medical facilities..."
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search facilities by name or location..."
                     style={styles.input}
-                    disabled={isLoading} // Disable input while loading
+                    disabled={isLoading}
                 />
-                <button type="submit" style={styles.button} disabled={isLoading}>
+                <button 
+                    type="submit" 
+                    style={{ 
+                        ...styles.button, 
+                        ...(isLoading || query.length < 2 ? styles.buttonDisabled : {}) 
+                    }}
+                    disabled={isLoading || query.length < 2}
+                >
                     {isLoading ? 'Searching...' : 'Search'}
                 </button>
             </form>
 
-            {/* Error Message */}
-            {error && <p style={styles.error}>{error}</p>}
+            {/* Rest of your component remains the same */}
+            {error && (
+                <div style={styles.errorContainer}>
+                    <p style={styles.errorText}>
+                        ⚠️ {error}
+                        {error.includes('Network') && (
+                            <span style={styles.errorHelp}>
+                                <br />Please check your internet connection or try again later.
+                            </span>
+                        )}
+                    </p>
+                </div>
+            )}
 
-            {/* Loading State */}
-            {isLoading && <p style={styles.loading}>Searching...</p>}
+            {isLoading && <div style={styles.loadingIndicator}>🔍 Searching facilities...</div>}
 
-            {/* Results */}
-            {!isLoading && (
-                <div style={styles.results}>
+            {!isLoading && searchPerformed && (
+                <div style={styles.resultsContainer}>
                     {results.length > 0 ? (
-                        results.map((item, index) => (
-                            <div key={index} style={styles.item}>
-                                <h3>{item.name}</h3>
-                                <p>{item.location}</p>
+                        <>
+                            <p style={styles.resultsSummary}>
+                                Found {totalResults} result{totalResults !== 1 ? 's' : ''}
+                            </p>
+                            <div style={styles.resultsList}>
+                                {results.map((facility) => (
+                                    <div key={facility.id} style={styles.facilityCard}>
+                                        <h3 style={styles.facilityName}>{facility.name}</h3>
+                                        <p style={styles.facilityInfo}>
+                                            <strong>Location:</strong> {facility.location || 'Not specified'}
+                                        </p>
+                                        {facility.specialty && (
+                                            <p style={styles.facilityInfo}>
+                                                <strong>Specialty:</strong> {facility.specialty}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-                        ))
+                        </>
                     ) : (
-                        <p>No results found.</p>
+                        <p style={styles.noResults}>
+                            No facilities found matching "{query}"
+                        </p>
                     )}
                 </div>
             )}
 
-            {/* Pagination Controls */}
-            {!isLoading && totalPages > 1 && (
+            {!isLoading && totalPages > 1 && results.length > 0 && (
                 <div style={styles.pagination}>
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1 || isLoading}
+                        disabled={currentPage === 1}
                         style={styles.paginationButton}
                     >
                         Previous
@@ -140,7 +162,7 @@ function MedicalFacilitySearch() {
                     </span>
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages || isLoading}
+                        disabled={currentPage === totalPages}
                         style={styles.paginationButton}
                     >
                         Next
@@ -151,77 +173,122 @@ function MedicalFacilitySearch() {
     );
 }
 
-// Styles
+// Styles remain the same as in previous example
 const styles = {
     container: {
-        padding: '20px',
-        textAlign: 'center',
         maxWidth: '800px',
         margin: '0 auto',
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif',
     },
     title: {
-        marginBottom: '20px',
-        fontSize: '24px',
-        color: '#333',
+        textAlign: 'center',
+        color: '#2c3e50',
+        marginBottom: '30px',
     },
     form: {
-        marginBottom: '20px',
         display: 'flex',
-        justifyContent: 'center',
         gap: '10px',
+        marginBottom: '20px',
+        justifyContent: 'center',
     },
     input: {
-        width: '300px',
-        padding: '10px',
+        flex: 1,
+        maxWidth: '500px',
+        padding: '12px 15px',
         fontSize: '16px',
-        border: '1px solid #ccc',
+        border: '1px solid #ddd',
         borderRadius: '4px',
+        outline: 'none',
+        transition: 'border 0.3s',
+    },
+    inputFocus: {
+        borderColor: '#3498db',
     },
     button: {
-        padding: '10px 20px',
-        fontSize: '16px',
-        backgroundColor: '#007bff',
-        color: '#fff',
+        padding: '12px 20px',
+        backgroundColor: '#3498db',
+        color: 'white',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
+        fontSize: '16px',
+        transition: 'background-color 0.3s',
     },
-    error: {
-        color: 'red',
+    buttonDisabled: {
+        backgroundColor: '#95a5a6',
+        cursor: 'not-allowed',
+    },
+    errorContainer: {
+        backgroundColor: '#fdecea',
+        padding: '15px',
+        borderRadius: '4px',
         marginBottom: '20px',
+        borderLeft: '4px solid #f44336',
     },
-    loading: {
-        marginTop: '20px',
+    errorText: {
+        color: '#f44336',
+        margin: 0,
+    },
+    errorHelp: {
+        fontSize: '14px',
+        color: '#666',
+    },
+    loadingIndicator: {
+        textAlign: 'center',
+        padding: '20px',
+        color: '#3498db',
         fontSize: '18px',
-        color: '#007bff',
     },
-    results: {
+    resultsContainer: {
         marginTop: '20px',
-        textAlign: 'left',
     },
-    item: {
-        padding: '10px',
-        borderBottom: '1px solid #eee',
+    resultsSummary: {
+        color: '#7f8c8d',
+        marginBottom: '15px',
+    },
+    resultsList: {
+        display: 'grid',
+        gap: '15px',
+    },
+    facilityCard: {
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    facilityName: {
+        marginTop: 0,
+        marginBottom: '10px',
+        color: '#2c3e50',
+    },
+    facilityInfo: {
+        margin: '5px 0',
+        color: '#34495e',
+    },
+    noResults: {
+        textAlign: 'center',
+        padding: '30px',
+        color: '#7f8c8d',
+        fontSize: '16px',
     },
     pagination: {
-        marginTop: '20px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '10px',
+        gap: '15px',
+        marginTop: '30px',
     },
     paginationButton: {
-        padding: '10px 20px',
-        fontSize: '16px',
-        backgroundColor: '#007bff',
-        color: '#fff',
+        padding: '8px 16px',
+        backgroundColor: '#3498db',
+        color: 'white',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
     },
     pageInfo: {
-        fontSize: '16px',
-        color: '#333',
+        color: '#34495e',
     },
 };
 

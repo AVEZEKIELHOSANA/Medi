@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.css";
 import { Link } from 'react-router-dom';
-import Navbar from './navbar.jsx';
+import Navbar from './navbar.jsx'
 import Footer from "./footer.jsx";
 import { motion } from "framer-motion";
 
@@ -148,7 +148,7 @@ function HomePage() {
             variants={itemVariants}
           >
             <img 
-              src="/src/assets/facil-sec.jpg" 
+              src="/src/assets/facil-sec.jpeg" 
               alt="Medical team" 
               className="rounded-xl shadow-xl w-full h-auto object-cover"
             />
